@@ -1,9 +1,10 @@
 from django.urls import path
-from event.views import hello,test,search_view
+from event.views import eventForm,search_view,categoryForm,ParticipantForm
 
 urlpatterns = [
-    path("hello/",hello),
-    path("test/",test),
+    path("eventForm/",eventForm),
+    path("categoryForm/",categoryForm, name=""),
+    path("participantForm/", ParticipantForm, name=""),
     
     path('search/', search_view, name='search')
     
