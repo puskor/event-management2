@@ -17,11 +17,13 @@ class Category(models.Model):
     def __str__(self):
         return self.name
     
+    
+    
 class Event(models.Model):
     name=models.CharField(max_length=50,unique=True)
     description=models.TextField(blank=True,null=True)
     photo=models.ImageField(upload_to=None, height_field=None, width_field=None, max_length=None,blank=True,null=True)
-    date=models.DateField()
+    date=models.DateField(auto_now=False, auto_now_add=False)
     time=models.TimeField()
     location=models.CharField(max_length=150)
     category=models.ForeignKey(Category,on_delete=models.CASCADE,related_name="events")

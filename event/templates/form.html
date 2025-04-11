@@ -12,26 +12,28 @@
 <body >
     
    
-    <div class="w-1/2 mx-auto mt-2 bg-green-600">
+    <div class="w-1/2 mx-auto mt-3 bg-sky-500 rounded-lg">
+
+       
 
         <div class="p-8">
-            <form>
+            <div>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="{% if message.tags == 'success' %}bg-green-500 p-3 m-3 rounded-lg {% endif %}">{{message}}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <form method="POST">
+                {% csrf_token %}
                 {{category_form.as_p}}
                 {{event_form.as_p}}
                 {{participant_form.as_p}}
                 <div class="items-center">
                     <button type="submit" class="border-2 border-red-600 mt-2 p-2 bg-red-500 rounded-lg"><div>SUBMIT</div></button>
-
                 </div>
             </form>
-
         </div>
-        
-        
     </div>
-
-    
-    
-
 </body>
 </html>

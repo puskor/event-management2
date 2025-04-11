@@ -23,8 +23,11 @@ class StyledFormMixin:
                 })
             elif isinstance(field.widget, forms.SelectDateWidget):
                 field.widget.attrs.update({
-                    "class": "border-2 border-gray-300 p-3 m-4 rounded-lg shadow-sm focus:outline-none focus:border-rose-500 focus:ring-rose-500"
+                    "class": "border-2 border-gray-300 p-3 m-4 rounded-lg shadow-sm focus:outline-none focus:border-rose-500 focus:ring-rose-500",
+                    'placeholder':  f"Enter yy/mm/dd",
+
                 })
+            
             elif isinstance(field.widget, forms.CheckboxSelectMultiple):
                 field.widget.attrs.update({
                     'class': "space-y-2"
@@ -48,11 +51,28 @@ class Category_form(StyledFormMixin,forms.ModelForm):
 class Event_form(StyledFormMixin,forms.ModelForm):
     class Meta:
         model=Event
-        exclude=["description"]
+        fields='__all__'
         widgets = {
-            'due_date': forms.SelectDateWidget
             
+            'date':forms.SelectDateWidget(
+                attrs={
+                    'type': 'date',
+                    'class': 'border-2 border-gray-300 p-3 m-4 rounded-lg shadow-sm focus:outline-none focus:border-rose-500 focus:ring-rose-500'
+                }),
+            'time': forms.TimeInput(
+                attrs={
+                    'type': 'time',
+                    'class': 'border-2 border-gray-300 p-3 m-4 rounded-lg shadow-sm focus:outline-none focus:border-rose-500 focus:ring-rose-500 focus:bg-white'
+                }),
+            # 'photo': forms.ClearableFileInput(
+            #     attrs={
+            #         'class': 'border-2 border-gray-300 p-3 m-4 rounded-lg shadow-sm focus:outline-none focus:border-rose-500 focus:ring-rose-500'
+            #     }
+            # )
         }
+            
+                
+     
         
     def __init__(self,*args, **kwargs):
         super().__init__(*args, **kwargs)
