@@ -1,0 +1,74 @@
+{% extends "dashboard/navbar.html" %}
+{% load static %}
+{% block user %}
+<section>
+
+    <div class="bg-rose-950 text-white justify-around flex flex-wrap gap-2 py-2">
+        <div>
+            <a href="?">
+                <button class="hover:bg-white hover:text-red-500 text-2xl px-4 py-1 rounded">
+                    Participant
+                </button>
+            </a>
+            <a href="?">
+                <button class="hover:bg-white hover:text-red-500 text-2xl px-4 py-1 rounded">
+                    All EVENT
+                </button>
+            </a>
+        </div>
+
+
+        {% for category in categorys %}
+            <a href="?category={{ category.id }}">
+                <button class="hover:bg-white hover:text-red-500 px-4 py-1 rounded">
+                    {{ category.name }}
+                </button>
+            </a>
+        {% endfor %}
+    </div>
+    
+        <div class="bg-cover bg-center h-screen" style="background-image: url('{% static 'images/pic2.jpg' %}');">
+                <div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
+                    {% for event in events %}
+                            <div class="flex justify-around items-center my-3">
+                                <a href="{% url "ParticipantForm" %}">
+                                    <div class="bg-red-500 rounded-lg">
+                                        <img src="{% static 'images/pubg.jpg' %}" alt="Game Image" class="w-48 h-48 rounded-lg">
+                                        <div class="text-white text-center text-2xl mt-2">
+                                            <button>{{event.name}}</button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                    {% endfor %}
+
+                    </div>
+                </div>
+        </div>
+
+
+        {% comment %} participant {% endcomment %}
+
+        <div class="border-4 border-amber-500 rounded-lg">
+            
+            {% for participant in participants %}
+
+            <div class="flex justify-between my-3 border-black border-2 p-3">
+                <div class="flex">
+                    <li></li>
+                    <div>{{participant.name}}</div>
+                </div>
+                <div>{{participant.email}}</div>
+                <div>{{participant.event.name}}</div>
+            </div>
+            
+            {% endfor %}
+            
+        </div>
+
+        
+</section>
+
+{% endblock user %}

@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from event.forms import Category_form,Event_form,Participant_form
 from django.contrib import messages
-
+from event.models import Event,Category,Participant
 def categoryForm(request):
     category_form=Category_form()
     if request.method=="POST":
@@ -29,7 +29,7 @@ def eventForm(request):
     return render(request,"form.html",context)
 
 
-def ParticipantForm(request):
+def participantForm(request):
     category_form=Category_form()
     event_form=Event_form()
     participant_form=Participant_form()
@@ -50,4 +50,37 @@ def search_view(request):
     query = request.GET.get('q', '')
     results = []  # Replace with actual search logic (database query, etc.)
     return render(request, 'search.html', {'query': query, 'results': results})
+
+def dashboard(request):
+    return render(request,"dashboard/navbar.html")
+
+# def user(request):
+#     category=Category.objects.all()
+#     events=Event.objects.all()
+#     context={
+#         "events":events,
+#         "categorys":category
+#     }
+#     return render(request,"dashboard/user.html",context)
+
+
+def user(request):
+    selected_category_id = request.GET.get("category")
+    if selected_category_id:
+        events = Event.objects.filter(category__id=selected_category_id)
+    else:
+        events = Event.objects.all()
+    
+    
+        
+    categorys = Category.objects.all()
+    participants=Participant.objects.all()
+
+    context = {
+        "events": events,
+        "categorys": categorys,
+        "participants":participants
+    }
+    return render(request, "dashboard/user.html", context)
+
 
