@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from event.forms import Category_form,Event_form,Participant_form
 from django.contrib import messages
 from event.models import Event,Category,Participant
+from django.db.models import Count
 def categoryForm(request):
     category_form=Category_form()
     if request.method=="POST":
@@ -30,8 +31,6 @@ def eventForm(request):
 
 
 def participantForm(request):
-    category_form=Category_form()
-    event_form=Event_form()
     participant_form=Participant_form()
     
     if request.method=="POST":
@@ -54,16 +53,6 @@ def search_view(request):
 def dashboard(request):
     return render(request,"dashboard/navbar.html")
 
-# def user(request):
-#     category=Category.objects.all()
-#     events=Event.objects.all()
-#     context={
-#         "events":events,
-#         "categorys":category
-#     }
-#     return render(request,"dashboard/user.html",context)
-
-
 def user(request):
     selected_category_id = request.GET.get("category")
     if selected_category_id:
@@ -71,16 +60,59 @@ def user(request):
     else:
         events = Event.objects.all()
     
-    
         
     categorys = Category.objects.all()
-    participants=Participant.objects.all()
+    show_participant = request.GET.get("show") == "participant"
+    participants = Participant.objects.all() if show_participant else []
+    
+    event_counts=Event.objects.aggregate(
+        total=Count("id")
+    )
+    category_counts=Category.objects.aggregate(
+        total=Count("id")
+    )
+    participant_counts=Participant.objects.aggregate(
+        total=Count("id")
+    )
 
     context = {
         "events": events,
         "categorys": categorys,
-        "participants":participants
+        "participants":participants,
+        "event_counts":event_counts,
+        "category_counts":category_counts,
+        "participant_counts":participant_counts
+        
     }
     return render(request, "dashboard/user.html", context)
 
+
+def update_participant(request, id):
+    participant = Participant.objects.get(id=id)
+    
+    if request.method == "POST":
+        participant_form = Participant_form(request.POST, instance=participant)
+        if participant_form.is_valid():
+            participant_form.save()
+            messages.success(request, "SUCCESSFULLY UPDATED")
+            return redirect("ParticipantForm")
+    else:
+        participant_form = Participant_form(instance=participant)
+    
+    context = {"participant_form": participant_form}
+    return render(request, "form.html", context)
+
+
+
+
+def delete_participant(request,id):
+    if request.method=="POST":
+        participant=Participant.objects.get(id=id)
+        participant.delete()
+        messages.success(request,"Delete successfully")
+    else:
+        messages.error(request,"Something is wrong")
+        
+    return redirect("user")
+    
 

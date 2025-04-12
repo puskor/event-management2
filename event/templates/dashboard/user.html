@@ -3,70 +3,123 @@
 {% block user %}
 <section>
 
-    <div class="bg-rose-950 text-white justify-around flex flex-wrap gap-2 py-2">
-        <div>
-            <a href="?">
-                <button class="hover:bg-white hover:text-red-500 text-2xl px-4 py-1 rounded">
-                    Participant
-                </button>
-            </a>
-            <a href="?">
-                <button class="hover:bg-white hover:text-red-500 text-2xl px-4 py-1 rounded">
-                    All EVENT
-                </button>
-            </a>
+    <section>
+        <div class="grid md:grid-cols-3 text-3xl items-center p-4 bg-rose-950 text-red-600 gap-3">
+            
+            <div class="w-full">
+                <a href="?show=participant">
+                    <div class="flex gap-6 bg-black justify-center py-2 px-5 w-full rounded-lg">
+                        <div>PARTICIPANT</div>
+                        <div class="bg-white px-4 rounded-full">{{participant_counts.total}}</div>
+                    </div>
+                </a>
+            </div>
+    
+            <div class="w-full">
+                <a href="?">
+                    <div class="flex gap-6 bg-black justify-center py-2 px-5 w-full rounded-lg">
+                        <div>EVENT</div>
+                        <div class="bg-white px-4 rounded-full">{{event_counts.total}}</div>
+                    </div>
+                </a>
+            </div>
+    
+            <div class="w-full">
+                <a href="?show=participant">
+                    <div class="flex gap-6 bg-black justify-center py-2 px-5 w-full rounded-lg">
+                        <div>CATEGORY</div>
+                        <div class="bg-white px-4 rounded-full">{{category_counts.total}}</div>
+                    </div>
+                </a>
+            </div>
+            
         </div>
+    </section>
+    
 
+    <div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="{% if message.tags == 'success' %}bg-green-500 p-3 m-3 rounded-lg {% else %}bg-red-600 {% endif %}">{{message}}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
 
+    <div class="bg-rose-900 text-white justify-around flex flex-wrap gap-2 py-2">
         {% for category in categorys %}
             <a href="?category={{ category.id }}">
-                <button class="hover:bg-white hover:text-red-500 px-4 py-1 rounded">
+                <button class="bg-red-500 hover:bg-white hover:text-red-500 px-4 py-1 rounded">
                     {{ category.name }}
                 </button>
             </a>
         {% endfor %}
     </div>
-    
-        <div class="bg-cover bg-center h-screen" style="background-image: url('{% static 'images/pic2.jpg' %}');">
-                <div>
 
-                    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
+{% comment %} participant {% endcomment %}
+    {% if participants %}
+        <div class="border-4 border-amber-500 rounded-lg my-5 bg-white p-4 h-screen mx-auto">
+            <h2 class="text-xl font-bold mb-3 text-black">Participants</h2>
+
+            {% for participant in participants %}
+                <div class="flex justify-between my-3 border-black border-2 p-3 items-center bg-gray-300 rounded-lg">
+                    <div class="flex">
+                        <li></li>
+                        <div>{{ participant.name }}</div>
+                    </div>
+                    <div>{{ participant.email }}</div>
+                    <div class="flex gap-3 items-center">
+                        <div>{{ participant.event.name }}</div>
+                        <div class="bg-red-600 p-2 text-white rounded-2xl">
+                            {% comment %} <a href="{% url "delete_participant" participant.id%}"><button>Delete</button></a> {% endcomment %}
+
+                            <form action="{% url 'delete_participant' participant.id %}" method="POST">
+                                {% csrf_token %}
+                                <button>Delete</button>
+                            </form>
+                        </div>
+                        <div class="bg-green-600 p-2 text-white rounded-2xl">
+                            <a href="{% url "update_participant" participant.id %}"><button>Edit</button></a>
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    
+        {% comment %} <div class="bg-cover bg-center h-screen" style="background-image: url('{% static 'images/pic2.jpg' %}');"> {% endcomment %}
+        <div class="bg-rose-950 ">
+                <div>
+                    <div class="grid grid-cols-2 md:grid-cols-3">
                     {% for event in events %}
-                            <div class="flex justify-around items-center my-3">
-                                <a href="{% url "ParticipantForm" %}">
-                                    <div class="bg-red-500 rounded-lg">
-                                        <img src="{% static 'images/pubg.jpg' %}" alt="Game Image" class="w-48 h-48 rounded-lg">
-                                        <div class="text-white text-center text-2xl mt-2">
-                                            <button>{{event.name}}</button>
+                            <div class="flex justify-around items-center my-3 mx-1">
+                                
+                                    <div class="bg-blue-950 text-white rounded-lg">
+                                        <img src="" alt="Image" class="w-72 h-48 rounded-lg">
+                                        <div class=" text-center text-2xl p-1">
+                                            <button>{{event.name|upper}}</button>
+                                        </div>
+                                        <div class="flex text-white rounded-2xl">
+                                            <div class="bg-red-600 w-full text-center rounded-bl-lg hover:text-black p-2">
+                                                <button>
+                                                    DELETE
+                                                </button>
+                                            </div>
+                                            <div class="bg-green-600 w-full text-center rounded-br-lg hover:text-black p-2">
+                                                <button>
+                                                    EDIT
+                                                </button>
+
+                                            </div>
                                         </div>
                                     </div>
-                                </a>
                             </div>
                     {% endfor %}
-
                     </div>
                 </div>
         </div>
 
-
-        {% comment %} participant {% endcomment %}
-
-        <div class="border-4 border-amber-500 rounded-lg">
-            
-            {% for participant in participants %}
-
-            <div class="flex justify-between my-3 border-black border-2 p-3">
-                <div class="flex">
-                    <li></li>
-                    <div>{{participant.name}}</div>
-                </div>
-                <div>{{participant.email}}</div>
-                <div>{{participant.event.name}}</div>
-            </div>
-            
-            {% endfor %}
-            
-        </div>
 
         
 </section>
