@@ -44,26 +44,21 @@ def participantForm(request):
     return render(request,"form.html",context)
 
 
-
-def search_view(request):
-    query = request.GET.get('q', '')
-    results = []  # Replace with actual search logic (database query, etc.)
-    return render(request, 'search.html', {'query': query, 'results': results})
-
 def dashboard(request):
     return render(request,"dashboard/navbar.html")
 
 def user(request):
-    selected_category_id = request.GET.get("category")
-    if selected_category_id:
-        events = Event.objects.filter(category__id=selected_category_id)
-    else:
-        events = Event.objects.all()
+    show_event=request.GET.get("show")=="event"
+    events = Event.objects.all() if show_event else []
     
         
-    categorys = Category.objects.all()
     show_participant = request.GET.get("show") == "participant"
-    participants = Participant.objects.all() if show_participant else []
+    participants = Participant.objects.prefetch_related("event").all() if show_participant else []
+    
+    show_category=request.GET.get("show")=="category"
+    categorys = Category.objects.all() if show_category else []
+    
+    
     
     event_counts=Event.objects.aggregate(
         total=Count("id")
@@ -102,9 +97,6 @@ def update_participant(request, id):
     context = {"participant_form": participant_form}
     return render(request, "form.html", context)
 
-
-
-
 def delete_participant(request,id):
     if request.method=="POST":
         participant=Participant.objects.get(id=id)
@@ -115,4 +107,59 @@ def delete_participant(request,id):
         
     return redirect("user")
     
+
+def update_event(request,id):
+    event=Event.objects.get(id=id)
+    
+    if request.method=="POST":
+        event_form=Event_form(request.POST ,instance=event)
+        if event_form.is_valid():
+            event_form.save()
+            messages.success(request,"SUCCESSFULLY UPDATED")
+            return redirect("eventForm")
+    else:
+        event_form=Event_form(instance=event)
+        
+    context={"event_form":event_form}
+    return render(request,"form.html",context)
+    
+
+def delete_event(request,id):
+    if request.method=="POST":
+        event=Event.objects.get(id=id)
+        event.delete()
+        messages.success(request,"SUCCESSFULLY DELETE")
+    else:
+        messages.error(request,"Something WRONG")
+        
+    return redirect("user")
+
+def update_category(request,id):
+    category=Category.objects.get(id=id)
+    if request.method=="POST":
+        category_form=Category_form(request.POST ,instance=category)
+        if category_form.is_valid():
+            category_form.save()
+            messages.success(request,"SUCCESSFULLY UPDATE")
+    else:
+        category_form=Category_form(instance=category)
+        
+    context={"category_form":category_form}
+    return render(request,"form.html",context)
+
+def delete_category(request,id):
+    if request.method=="POST":
+        category=Category.objects.get(id=id)
+        category.delete()
+        messages.success(request,"SUCCESSFULLY DELETE")
+        
+    else:
+        messages.error(request,"Something WRONG")
+    
+    return redirect("user")
+
+
+
+
+
 
