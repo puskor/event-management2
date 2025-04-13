@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+</head>
+<body>
+
+    {% comment %} top work {% endcomment %}
+    <section>
+        <div class="flex justify-around items-center h-auto bg-black text-white">
+
+            <div class="text-4xl my-2">
+                <div class="flex justify-around text-red-500">
+                    <div>E</div>
+                    <div>V</div>
+                    <div>E</div>
+                    <div>N</div>
+                    <div>T</div>
+
+                </div>
+
+                <div >MANAGEMENT</div>
+            </div>
+          
+            <div class="grid md:grid-cols-3 gap-3 my-2">
+
+                <a href="{% url 'categoryForm' %}">
+                    <button class="bg-red-500 hover:bg-blue-600 hover:text-red-500 py-2 w-50 rounded ">
+                        Create CATEGORY
+                    </button>
+                </a>
+            
+                <a href="{% url 'eventForm' %}">
+                    <button class="bg-red-500 hover:bg-blue-600 hover:text-red-500 py-2 w-50 rounded ">
+                        Create EVENT 
+                    </button>
+                </a>
+            
+                <a href="{% url 'ParticipantForm' %}">
+                    <button class="bg-red-500 hover:bg-blue-600 hover:text-red-500 py-2 w-50 rounded">
+                        Enter PARTICIPANT
+                    </button>
+                </a>
+            
+            </div>
+            
+        </div>
+        
+    </section>
+
+    {% comment %} body work {% endcomment %}
+
+    {% block user %}{% endblock user %}
+    
+    
+    
+    
+</body>
+</html>

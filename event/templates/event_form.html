@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1st page</title>
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+</head>
+<body >
+    <div class="bg-cover bg-center h-screen" style="background-image: url('{% static 'images/pic2.jpg' %}');">
+        <div>
+            <div class="flex justify-center">
+                <form method="GET" action="{% url 'search' %}" class="relative w-96 mt-3">
+                    <input type="text" name="q" placeholder="Search..." 
+                        class="w-full px-4 py-2 border text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+                    <button type="submit" 
+                            class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600">
+                        🔍
+                    </button>
+                </form>
+            </div>
+
+            <div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3  m-9">
+
+                    <div class="flex flex-col items-center rounded-lg p-4">
+                        <div class="bg-red-500 rounded-lg">
+                            <img src="{% static 'images/pubg.jpg' %}" alt="Game Image" class="w-48 h-48 rounded-lg">
+                            <div class="text-white text-center text-2xl mt-2">
+                                <h1>PUBG</h1>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="flex flex-col items-center rounded-lg p-4">
+                        <div class="bg-red-500 rounded-lg">
+                            <img src="{% static 'images/call_of_duty.jpg' %}" alt="Game Image" class="w-48 h-48 rounded-lg">
+                            <div class="text-white text-center text-2xl mt-2">
+                                <h1>CALL OF DUTY</h1>
+                            </div>
+                        </div>  
+                    </div>
+
+                    <div class="flex flex-col items-center rounded-lg p-4">
+                        <div class="bg-red-500 rounded-lg">
+                            <img src="{% static 'images/freefire.jpg' %}" alt="Game Image" class="w-48 h-48 rounded-lg">
+                            <div class="text-white text-center text-2xl mt-2">
+                                <h1>FREEFIRE</h1>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center rounded-lg p-4">
+                        <div class="bg-red-500 rounded-lg">
+                            <img src="{% static 'images/asphalt.jpg' %}" alt="Game Image" class="w-48 h-48 rounded-lg">
+                            <div class="text-white text-center text-2xl mt-2">
+                                <h1>ASPHALT 9</h1>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center rounded-lg p-4">
+                        <div class="bg-red-500 rounded-lg">
+                            <img src="{% static 'images/clash_of_clans.jpg' %}" alt="Game Image" class="w-48 h-48 rounded-lg">
+                            <div class="text-white text-center text-2xl mt-2">
+                                <h1>C O C</h1>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center rounded-lg p-4">
+                        <div class="bg-red-500 rounded-lg">
+                            <img src="{% static 'images/efootball.jpg' %}" alt="Game Image" class="w-48 h-48 rounded-lg">
+                            <div class="text-white text-center text-2xl mt-2">
+                                <h1>E-FOOTBALL</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+        </div>
+
+    </div>
+</body>
+</html>
