@@ -160,6 +160,11 @@ def delete_category(request,id):
 
 
 
+def navbar(request):
+    return render(request,"dashboard/navbar.html")
+
+
+
 
 
 
