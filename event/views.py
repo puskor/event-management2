@@ -13,7 +13,7 @@ def categoryForm(request):
             messages.success(request,"Successfully added")
             return redirect("categoryForm")
             
-    context={"category_form":category_form}
+    context={"category_form":category_form }
     return render(request,"form.html",context)
 
 

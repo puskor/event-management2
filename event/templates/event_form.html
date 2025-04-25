@@ -1,13 +1,6 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1st page</title>
-    <link rel="stylesheet" href="{% static 'css/output.css' %}">
-</head>
-<body >
+
+    {% extends "logged.html" %}
+    {% block content %}
     <div class="bg-cover bg-center h-screen" style="background-image: url('{% static 'images/pic2.jpg' %}');">
         <div>
             <div class="flex justify-center">
@@ -85,5 +78,6 @@
         </div>
 
     </div>
-</body>
-</html>
+    {% endblock content %}
+
+

@@ -1,6 +1,5 @@
-{% extends "dashboard/navbar.html" %}
-{% load static %}
-{% block user %}
+{% extends "logged.html" %}
+{% block content %}
 <section>
 
     <section>
@@ -71,8 +70,6 @@
                     </div>
                     
                 </div>
-                
-                
                 <br>
 
             {% endfor %}
@@ -168,4 +165,4 @@
         
 </section>
 
-{% endblock user %}
+{% endblock content %}

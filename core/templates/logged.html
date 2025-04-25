@@ -14,7 +14,7 @@
     <!--navbar-->
     <section>
         <div class="flex justify-around items-center h-auto bg-black text-white">
-            <a href="#">
+            <a href="{% url "logged" %}">
             <div class="text-4xl my-2">
                 <div class="flex justify-around text-red-500">
                     <div>E</div>
@@ -73,7 +73,9 @@
 
     <!--home page-->
     <section class="bg-gray-800 h-full">
-        {% include "logged_home.html" %}
+        {% block content %}
+            {% include "logged_home.html" %}
+        {% endblock content %}
     </section>
 </body>
 </html>
