@@ -1,10 +1,12 @@
 from django.shortcuts import render,redirect
-from users.forms import Signup_form,Signin_form
+from users.forms import Signup_form,Signin_form,Assign_roll_form,Create_group_form
 from django.contrib import messages
 from django.contrib.auth import login,logout
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.models import User,Group
 from django.http import HttpResponse
+from django.db.models import Prefetch
+
 
 
 def sign_up(request):
@@ -16,8 +18,8 @@ def sign_up(request):
             user.set_password(form.cleaned_data.get("password1"))
             user.is_active=False
             user.save()
-            messages.success(request,"Sign Up successfully")
-            return redirect("logged")
+            messages.success(request,"Please check your mail")
+            return redirect("sign_in")
         else:
             print("Form is not valid")
     return render(request,"register/sign_up.html",{"form":form})
@@ -59,3 +61,45 @@ def activate_user(request,user_id,token):
             
     except User.DoesNotExist:
         return HttpResponse('User not found')
+    
+    
+
+def admin_dashboard(request):
+    users=User.objects.prefetch_related(
+        Prefetch("groups",queryset=Group.objects.all(),to_attr="all_groups")
+    ).all()
+    for user in users:
+        if user.all_groups:
+            user.group_name=user.all_groups[0].name
+        else:
+            user.group_name="No group assign"
+    return render(request,"admin/dashboard.html",{"users":users})
+
+def assign_roll(request,user_id):
+    user=User.objects.get(id=user_id)
+    form=Assign_roll_form()
+    if request.method=="POST":
+        form=Assign_roll_form(request.POST)
+        if form.is_valid():
+            role=form.cleaned_data.get("role")
+            user.groups.clear()
+            user.groups.add(role)
+            messages.success(request, f"User {user.username} has been assigned to the {role.name} role")
+            return redirect('admin_dashboard')
+    return render(request,"admin/assign_roll.html",{"form":form})
+
+
+def create_group(request):
+    form=Create_group_form()
+    if request.method=="POST":
+        form=Create_group_form(request.POST)
+        if form.is_valid():
+            group=form.save()
+            messages.success(request,f"{group.name} group create successfully")
+            return redirect("admin_dashboard")
+    return render(request,"admin/create_group.html",{"form":form})
+
+def group_list(request):
+    groups = Group.objects.prefetch_related('permissions').all()
+    return render(request, 'admin/group_list.html', {'groups': groups})
+

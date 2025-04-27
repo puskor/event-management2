@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group,Permission
 from django import forms
 from event.forms import StyledFormMixin
 import re
@@ -64,4 +64,21 @@ class Signin_form(StyledFormMixin,AuthenticationForm):
     def __init__(self, *arg, **kwarg):
         super().__init__(*arg, **kwarg)
     
+
+class Assign_roll_form(StyledFormMixin, forms.Form):
+    role=forms.ModelChoiceField(
+        queryset=Group.objects.all(),
+        empty_label="Select a role"
+    )
     
+class Create_group_form(StyledFormMixin, forms.ModelForm):
+    permissions = forms.ModelMultipleChoiceField(
+        queryset=Permission.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label='Assign Permission'
+    )
+    
+    class Meta:
+        model = Group
+        fields = ['name', 'permissions']

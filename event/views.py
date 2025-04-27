@@ -4,6 +4,7 @@ from event.forms import Category_form,Event_form,Participant_form
 from django.contrib import messages
 from event.models import Event,Category,Participant
 from django.db.models import Count
+
 def categoryForm(request):
     category_form=Category_form()
     if request.method=="POST":
@@ -57,9 +58,7 @@ def user(request):
     
     show_category=request.GET.get("show")=="category"
     categorys = Category.objects.all() if show_category else []
-    
-    
-    
+
     event_counts=Event.objects.aggregate(
         total=Count("id")
     )

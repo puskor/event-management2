@@ -9,3 +9,7 @@ def logged(request):
 
 def home_page(request):
     return render(request,"home.html")
+
+
+def contact(request):
+    return render(request,"contact.html")

@@ -1,0 +1,19 @@
+
+{% extends "logged.html" %}
+{% block content %}
+    <section>
+        <div class="bg-white grid md:grid-cols-4 grid-cols-2 gap-2 text-center p-3">
+            <a href="{% url "admin_dashboard" %}"><div class="border-2 p-2 hover:font-bold hover:border-4">Dashboard</div></a>
+            <a href="{% url "create_group" %}"><div class="border-2 p-2 hover:font-bold hover:border-4">Create group</div></a>
+            <a href="{% url "group_list" %}"><div class="border-2 p-2 hover:font-bold hover:border-4">Groups</div></a>
+            <a href="{% url 'user' %}"><div class="border-2 p-2 hover:font-bold hover:border-4">Tasks</div></a>
+        </div>
+    </section>
+    <div>
+        {% block admin %}
+            {% include "admin/user_list.html" %}
+        {% endblock admin %}
+
+    </div>
+    
+{% endblock content %}
