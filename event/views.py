@@ -4,7 +4,22 @@ from event.forms import Category_form,Event_form,Participant_form
 from django.contrib import messages
 from event.models import Event,Category,Participant
 from django.db.models import Count
+from django.contrib.auth.decorators import user_passes_test,login_required
 
+def is_admin(user):
+    return user.groups.filter(name="Admin").exists()
+
+def is_manager(user):
+    return user.groups.filter(name="Manager").exists()
+
+def is_participant(user):
+    return user.groups.filter(name="Participant").exists()
+
+def is_manager_or_admin(user):
+    return is_admin(user) or is_manager(user)
+
+
+@user_passes_test(is_manager_or_admin,login_url="no_permission")
 def categoryForm(request):
     category_form=Category_form()
     if request.method=="POST":
@@ -17,7 +32,7 @@ def categoryForm(request):
     context={"category_form":category_form }
     return render(request,"form.html",context)
 
-
+@user_passes_test(is_manager_or_admin,login_url="no_permission")
 def eventForm(request):
     category_form=Category_form()
     event_form=Event_form()
@@ -96,6 +111,7 @@ def update_participant(request, id):
     context = {"participant_form": participant_form}
     return render(request, "form.html", context)
 
+@user_passes_test(is_manager_or_admin,login_url="no_permission")
 def delete_participant(request,id):
     if request.method=="POST":
         participant=Participant.objects.get(id=id)
@@ -106,7 +122,7 @@ def delete_participant(request,id):
         
     return redirect("user")
     
-
+@user_passes_test(is_manager_or_admin,login_url="no_permission")
 def update_event(request,id):
     event=Event.objects.get(id=id)
     
@@ -122,7 +138,7 @@ def update_event(request,id):
     context={"event_form":event_form}
     return render(request,"form.html",context)
     
-
+@user_passes_test(is_manager_or_admin,login_url="no_permission")
 def delete_event(request,id):
     if request.method=="POST":
         event=Event.objects.get(id=id)
@@ -133,6 +149,7 @@ def delete_event(request,id):
         
     return redirect("user")
 
+@user_passes_test(is_manager_or_admin,login_url="no_permission")
 def update_category(request,id):
     category=Category.objects.get(id=id)
     if request.method=="POST":
@@ -146,6 +163,7 @@ def update_category(request,id):
     context={"category_form":category_form}
     return render(request,"form.html",context)
 
+@user_passes_test(is_manager_or_admin,login_url="no_permission")
 def delete_category(request,id):
     if request.method=="POST":
         category=Category.objects.get(id=id)

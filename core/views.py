@@ -13,3 +13,6 @@ def home_page(request):
 
 def contact(request):
     return render(request,"contact.html")
+
+def no_permission(request):
+    return render(request,"no_permission.html")

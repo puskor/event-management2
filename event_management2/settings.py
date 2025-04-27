@@ -88,24 +88,24 @@ WSGI_APPLICATION = 'event_management2.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config("DB_NAME"),
-        'USER': config("DB_USER"),
-        'PASSWORD': config("DB_PASSWORD"),
-        'HOST': config("DB_DB_HOST"),  # or your database host
-        'PORT': config("DB_PORT"),  # default PostgreSQL port
-    }
-}
-
 # DATABASES = {
-#     'default': dj_database_url.config(
-#         # Replace this value with your local database's connection string.
-#         default='postgresql://event_managemet2_user:1ndXaz7Wed1qIn2FNLRqsZRr1yzFefNA@dpg-cvudkbmuk2gs7389rn60-a.oregon-postgres.render.com/event_managemet2',
-#         conn_max_age=600
-#     )
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config("DB_NAME"),
+#         'USER': config("DB_USER"),
+#         'PASSWORD': config("DB_PASSWORD"),
+#         'HOST': config("DB_DB_HOST"),  # or your database host
+#         'PORT': config("DB_PORT"),  # default PostgreSQL port
+#     }
 # }
+
+DATABASES = {
+    'default': dj_database_url.config(
+        # Replace this value with your local database's connection string.
+        default='postgresql://event_managemet2_user:1ndXaz7Wed1qIn2FNLRqsZRr1yzFefNA@dpg-cvudkbmuk2gs7389rn60-a.oregon-postgres.render.com/event_managemet2',
+        conn_max_age=600
+    )
+}
 
 INTERNAL_IPS = [
     # ...
@@ -171,6 +171,5 @@ EMAIL_HOST_USER = config("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 
 FRONTEND_URL = 'http://127.0.0.1:8000'
-
 
 LOGIN_URL="sign_in"
