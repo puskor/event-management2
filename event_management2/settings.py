@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import dj_database_url
-# from decouple import config
+from decouple import config
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -102,16 +102,16 @@ WSGI_APPLICATION = 'event_management2.wsgi.application'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.getenv("DB_NAME"),
-#         'USER': os.getenv("DB_USER"),
-#         'PASSWORD': os.getenv("DB_PASSWORD"),
-#         'HOST': os.getenv("DB_DB_HOST"),  # or your database host
-#         'PORT': os.getenv("DB_PORT"),  # default PostgreSQL port
+#         'NAME': config("DB_NAME"),
+#         'USER': config("DB_USER"),
+#         'PASSWORD': config("DB_PASSWORD"),
+#         'HOST': config("DB_DB_HOST"),  # or your database host
+#         'PORT': config("DB_PORT"),  # default PostgreSQL port
 #     }
 # }
 
 DATABASES = {
-    'default': dj_database_url.os.getenv(
+    'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
         default='postgresql://event_managemet2_user:1ndXaz7Wed1qIn2FNLRqsZRr1yzFefNA@dpg-cvudkbmuk2gs7389rn60-a.oregon-postgres.render.com/event_managemet2',
         conn_max_age=600
