@@ -12,7 +12,18 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import dj_database_url
-from decouple import config
+# from decouple import config
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from .env file
+load_dotenv(BASE_DIR / '.env')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -91,16 +102,16 @@ WSGI_APPLICATION = 'event_management2.wsgi.application'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': config("DB_NAME"),
-#         'USER': config("DB_USER"),
-#         'PASSWORD': config("DB_PASSWORD"),
-#         'HOST': config("DB_DB_HOST"),  # or your database host
-#         'PORT': config("DB_PORT"),  # default PostgreSQL port
+#         'NAME': os.getenv("DB_NAME"),
+#         'USER': os.getenv("DB_USER"),
+#         'PASSWORD': os.getenv("DB_PASSWORD"),
+#         'HOST': os.getenv("DB_DB_HOST"),  # or your database host
+#         'PORT': os.getenv("DB_PORT"),  # default PostgreSQL port
 #     }
 # }
 
 DATABASES = {
-    'default': dj_database_url.config(
+    'default': dj_database_url.os.getenv(
         # Replace this value with your local database's connection string.
         default='postgresql://event_managemet2_user:1ndXaz7Wed1qIn2FNLRqsZRr1yzFefNA@dpg-cvudkbmuk2gs7389rn60-a.oregon-postgres.render.com/event_managemet2',
         conn_max_age=600
@@ -164,11 +175,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = config("EMAIL_HOST")
-EMAIL_USE_TLS = config("EMAIL_USE_TLS")
-EMAIL_PORT = config("EMAIL_PORT")
-EMAIL_HOST_USER = config("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")
+EMAIL_PORT = os.getenv("EMAIL_PORT")
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 FRONTEND_URL = 'http://127.0.0.1:8000'
 
