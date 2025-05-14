@@ -2,7 +2,7 @@ from django.contrib.auth.models import User,Group,Permission
 from django import forms
 from event.forms import StyledFormMixin
 import re
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm,PasswordChangeForm,PasswordResetForm,SetPasswordForm
 
 
 
@@ -82,3 +82,12 @@ class Create_group_form(StyledFormMixin, forms.ModelForm):
     class Meta:
         model = Group
         fields = ['name', 'permissions']
+        
+class Custom_pass_change_form(StyledFormMixin,PasswordChangeForm):
+    pass
+
+class Custom_pass_reset_form(StyledFormMixin,PasswordResetForm):
+    pass
+
+class Custom_pass_reset_confirm_form(StyledFormMixin,SetPasswordForm):
+    pass

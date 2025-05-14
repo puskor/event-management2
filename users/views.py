@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from users.forms import Signup_form,Signin_form,Assign_roll_form,Create_group_form
+from users.forms import Signup_form,Signin_form,Assign_roll_form,Create_group_form,Custom_pass_change_form,Custom_pass_reset_form,Custom_pass_reset_confirm_form
 from django.contrib import messages
 from django.contrib.auth import login,logout
 from django.contrib.auth.tokens import default_token_generator
@@ -7,8 +7,9 @@ from django.contrib.auth.models import User,Group
 from django.http import HttpResponse
 from django.db.models import Prefetch
 from django.contrib.auth.decorators import login_required,user_passes_test
-
-
+from django.views.generic import TemplateView
+from django.contrib.auth.views import PasswordChangeView,PasswordChangeDoneView,PasswordResetView,PasswordResetConfirmView
+from django.urls import reverse_lazy
 
 def is_admin(user):
     return user.groups.filter(name="Admin").exists()
@@ -111,3 +112,58 @@ def group_list(request):
     groups = Group.objects.prefetch_related('permissions').all()
     return render(request, 'admin/group_list.html', {'groups': groups})
 
+
+
+class Profile_view(TemplateView):
+    template_name = "accounts/profile.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user=self.request.user
+        
+        context["username"] = user.username
+        context["email"] = user.email
+        context["name"] = user.get_full_name()
+        
+        context["join_date"] = user.date_joined
+        context["last_login"] = user.last_login
+        return context
+        
+        
+class Password_change(PasswordChangeView):
+    template_name = "accounts/password_change.html"
+    form_class = Custom_pass_change_form
+    
+class Password_change_done(PasswordChangeDoneView):
+    template_name ="accounts/password_change_done.html"
+    
+class Password_reset(PasswordResetView):
+    template_name = "register/reset_password.html"
+    form_class = Custom_pass_reset_form
+    success_url = reverse_lazy("sign_in")
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['protocol'] = 'https' if self.request.is_secure() else 'http'
+        context['domain'] = self.request.get_host()
+        return context
+    
+    def form_valid(self, form):
+        messages.success(
+            self.request,"please check your email"
+        )
+        return super().form_valid(form)
+    
+    
+class Password_reset_confirm(PasswordResetConfirmView):
+    template_name = "register/reset_password.html"
+    form_class = Custom_pass_reset_confirm_form
+    success_url = reverse_lazy("sign_in")
+    
+    def form_valid(self, form):
+        messages.success(
+            self.request,"Password reset successfully"
+        )
+        return super().form_valid(form)
+    
+    
