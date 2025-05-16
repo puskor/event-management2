@@ -5,6 +5,7 @@ from django.contrib import messages
 from event.models import Event,Category,Participant
 from django.db.models import Count
 from django.contrib.auth.decorators import user_passes_test,login_required
+# from django.views.generic import 
 
 def is_admin(user):
     return user.groups.filter(name="Admin").exists()

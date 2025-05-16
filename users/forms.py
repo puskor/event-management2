@@ -71,6 +71,7 @@ class Assign_roll_form(StyledFormMixin, forms.Form):
         empty_label="Select a role"
     )
     
+    
 class Create_group_form(StyledFormMixin, forms.ModelForm):
     permissions = forms.ModelMultipleChoiceField(
         queryset=Permission.objects.all(),

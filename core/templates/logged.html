@@ -40,12 +40,14 @@
 
             </div>
             <div class="md:flex justify-center gap-3 p-2 hidden">
-            
-                <a href="{% url 'sign_out' %}">
-                    <button class="bg-red-500 hover:bg-white hover:text-red-500 hover:text-2xl hover:font-bold py-2 w-50 rounded ">
+
+                <form method="POST" action="{% url 'sign_out' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-red-500 hover:bg-white hover:text-red-500 hover:text-2xl hover:font-bold py-2 w-50 rounded">
                         SIGN OUT
                     </button>
-                </a>
+                </form>
+
             </div>
             <div class="md:hidden flex justify-center">
                 <button id="menu-toggle">
@@ -65,9 +67,12 @@
             <a href="#" class="block py-2 text-gray-600 hover:text-gray-800 font-semibold"
               >Contact</a
             >
-            <a href="{% url 'sign_out' %}" class="block py-2 text-gray-600 hover:text-gray-800 font-semibold"
-              >Sign Out</a
-            >
+            <form method="POST" action="{% url 'sign_out' %}">
+                {% csrf_token %}
+                <button type="submit" class="block py-2 text-gray-600 hover:text-gray-800 font-semibold">
+                    SIGN OUT
+                </button>
+            </form>
         </div>
     </section>
 

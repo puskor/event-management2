@@ -8,8 +8,11 @@ from django.http import HttpResponse
 from django.db.models import Prefetch
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.views.generic import TemplateView
-from django.contrib.auth.views import PasswordChangeView,PasswordChangeDoneView,PasswordResetView,PasswordResetConfirmView
+from django.contrib.auth.views import PasswordChangeView,PasswordChangeDoneView,PasswordResetView,PasswordResetConfirmView,LoginView,LogoutView
 from django.urls import reverse_lazy
+from django.views.generic import FormView
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def is_admin(user):
     return user.groups.filter(name="Admin").exists()
@@ -30,6 +33,18 @@ def sign_up(request):
             print("Form is not valid")
     return render(request,"register/sign_up.html",{"form":form})
 
+class Sign_up_view(FormView):
+    template_name = "register/sign_up.html"
+    form_class = Signup_form
+    success_url = reverse_lazy("sign_in")
+    def form_valid(self, form):
+        user=form.save(commit=False)
+        user.set_password(form.cleaned_data.get("password1"))
+        user.is_active=False
+        user.save()
+        messages.success(self.request,"Please check your mail")
+        return super().form_valid(form)
+    
 
 def sign_in(request):
     form=Signin_form()
@@ -47,13 +62,29 @@ def sign_in(request):
     print("sign in kaj kore nai")
     return render(request,"register/sign_in.html",{"form":form})
 
+
+class Sign_in_view(LoginView):
+    form_class = Signin_form
+    template_name = "register/sign_in.html"
+    def get_success_url(self):
+        next_url = self.request.GET.get('next')
+        return next_url if next_url else super().get_success_url()
+
+    
+        
+        
 @login_required
 def sign_out(request):
     if request.method=="POST":
+        print("hocce")
         logout(request)
         return redirect("home")
     return redirect("home")
-        
+
+
+class Sign_out_view(LogoutView):
+    next_page = reverse_lazy("home")
+
 
 def activate_user(request,user_id,token):
     try:
@@ -96,6 +127,7 @@ def assign_roll(request,user_id):
             return redirect('admin_dashboard')
     return render(request,"admin/assign_roll.html",{"form":form})
 
+@login_required(login_url='/users/sign_in/')
 @user_passes_test(is_admin,login_url="no_permission")
 def create_group(request):
     form=Create_group_form()
