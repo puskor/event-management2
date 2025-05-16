@@ -5,7 +5,8 @@ from django.contrib import messages
 from event.models import Event,Category,Participant
 from django.db.models import Count
 from django.contrib.auth.decorators import user_passes_test,login_required
-# from django.views.generic import 
+from django.views.generic import FormView,TemplateView,UpdateView
+from django.urls import reverse_lazy
 
 def is_admin(user):
     return user.groups.filter(name="Admin").exists()
@@ -60,6 +61,21 @@ def participantForm(request):
     context={"participant_form":participant_form}
     return render(request,"form.html",context)
 
+class ParticipantView(FormView):
+    template_name = "form.html"
+    form_class = Participant_form
+    success_url = reverse_lazy("ParticipantForm")
+    
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request ,"Successfully added")
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["participant_form"] = context["form"]
+        return context
+
 
 def dashboard(request):
     return render(request,"dashboard/navbar.html")
@@ -96,6 +112,24 @@ def user(request):
     }
     return render(request, "dashboard/user.html", context)
 
+class UserView(TemplateView):
+    template_name = "dashboard/user.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        show = self.request.GET.get("show")
+        
+        context["events"] = Event.objects.all() if show == "event" else []
+        context["participants"] = Participant.objects.prefetch_related("event").all() if show == "participant" else []
+        context["categorys"] = Category.objects.all() if show == "category" else []
+
+        context["event_counts"] = Event.objects.aggregate(total=Count("id"))
+        context["category_counts"] = Category.objects.aggregate(total=Count("id"))
+        context["participant_counts"] = Participant.objects.aggregate(total=Count("id"))
+
+        return context
+    
+
 
 def update_participant(request, id):
     participant = Participant.objects.get(id=id)
@@ -112,6 +146,25 @@ def update_participant(request, id):
     context = {"participant_form": participant_form}
     return render(request, "form.html", context)
 
+class Update_participantView(UpdateView):
+    model = Participant
+    template_name="form.html"
+    success_url = reverse_lazy("ParticipantForm")
+    form_class = Participant_form
+    
+    def form_valid(self, form):
+        messages.success(self.request , "Successfully added")
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["participant_form"] = context["form"]
+        return context
+    
+    
+    
+
+
 @user_passes_test(is_manager_or_admin,login_url="no_permission")
 def delete_participant(request,id):
     if request.method=="POST":
@@ -122,6 +175,7 @@ def delete_participant(request,id):
         messages.error(request,"Something is wrong")
         
     return redirect("user")
+    
     
 @user_passes_test(is_manager_or_admin,login_url="no_permission")
 def update_event(request,id):
@@ -138,6 +192,31 @@ def update_event(request,id):
         
     context={"event_form":event_form}
     return render(request,"form.html",context)
+
+class Update_EventView(UpdateView):
+    model = Event
+    form_class = Event_form
+    template_name = "form.html"
+    success_url = reverse_lazy("eventForm")
+    
+    def test_func(self):
+        return is_manager_or_admin(self.request.user)
+    
+    def handle_no_permission(self):
+        return redirect("no_permission")
+    
+    def form_valid(self, form):
+        messages.success(self.request ,"Event update successfully")
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["event_form"] = context["form"]
+        return context
+    
+    
+    
+    
     
 @user_passes_test(is_manager_or_admin,login_url="no_permission")
 def delete_event(request,id):
